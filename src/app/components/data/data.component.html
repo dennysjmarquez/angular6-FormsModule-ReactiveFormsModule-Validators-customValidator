@@ -1,0 +1,189 @@
+<h4>Formularios
+  <small>data</small>
+</h4>
+<hr>
+<form [formGroup]="forma" (ngSubmit)="guardar()">
+
+  <div formGroupName="nombreCompleto">
+
+    <div class="form-group row"
+         [ngClass]="{'has-danger': forma.get('nombreCompleto.nombre').status == 'INVALID' && forma.get('nombreCompleto.nombre').touched}">
+      <label class="col-2 col-form-label">Nombre</label>
+      <div class="col-8">
+
+        <input [formControlName]="['nombre']"
+               class="form-control"
+               type="text"
+               placeholder="Nombre"
+               name="nombre"
+        >
+        <!--{{ forma | jsonFull }}-->
+        <div class="form-control-feedback" *ngIf="forma.get('nombreCompleto.nombre').touched && forma.controls['nombreCompleto'].controls['nombre'].errors?.required">
+          Este campo es obligatorio *
+        </div>
+        <div class="form-control-feedback"
+             *ngIf="forma.controls['nombreCompleto'].controls['nombre'].errors?.minlength">
+          Mínimo {{forma.controls['nombreCompleto'].controls['nombre'].errors?.minlength.requiredLength}} caracteres.
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-group row"
+         [ngClass]="{'has-danger': forma.get('nombreCompleto.apellido').status == 'INVALID' && forma.get('nombreCompleto.apellido').touched}">
+      <label class="col-2 col-form-label">Apellido</label>
+      <div class="col-8">
+
+        <input [formControlName]="['apellido']"
+               class="form-control"
+               type="text"
+               placeholder="Apellido"
+               name="apellido"
+        >
+
+        <div *ngIf="forma.get('nombreCompleto.apellido').touched && forma.get('nombreCompleto.apellido')['errors']?.required">
+          Este campo es obligatorio *</div>
+        <div *ngIf="forma.get('nombreCompleto.apellido')['errors']?.minlength">
+          Mínimo {{ forma.get('nombreCompleto.apellido')['errors']?.minlength.requiredLength }} caracteres.
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-group row"
+       [ngClass]="{'has-danger': forma.get('email').status == 'INVALID' && forma.get('email').touched}">
+    <label class="col-2 col-form-label">Correo</label>
+    <div class="col-md-8">
+
+      <input [formControlName]="['email']"
+             class="form-control"
+             type="email"
+             placeholder="Correo electr&oacute;nico"
+             name="email"
+      >
+
+      <div *ngIf="forma.get('email').touched && forma.controls['email'].errors?.required">
+        Este campo es obligatorio *</div>
+      <div *ngIf="forma.controls['email'].errors?.pattern">{{forma.controls['email'].errors?.pattern.actualValue}} No es
+        un Email valido
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="form-group row"
+       [ngClass]="{'has-danger': forma.get('username').status == 'INVALID' && forma.get('username').touched}">
+    <label class="col-2 col-form-label">Username</label>
+    <div class="col-8">
+
+      <input [formControlName]="['username']"
+             class="form-control"
+             type="text"
+             placeholder="Usuario"
+
+      >
+
+      <div class="form-control-feedback" *ngIf="forma.get('username').touched && forma.controls['username'].errors?.required">
+        Este campo es obligatorio *
+      </div>
+
+      <div class="form-control-feedback" *ngIf="forma.controls['username'].errors?.existe">
+        Este nombre de usuario existe
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="form-group row"
+       [ngClass]="{'has-danger': forma.get('password1').status == 'INVALID' && forma.get('password1').touched}">
+    <label class="col-2 col-form-label">Password</label>
+    <div class="col-md-8">
+
+      <input [formControlName]="['password1']"
+             class="form-control"
+             type="password"
+             placeholder="Password"
+
+      >
+
+      <div *ngIf="forma.get('password1').touched && forma.controls['password1'].errors?.required">
+        Este campo es obligatorio *</div>
+
+    </div>
+
+  </div>
+
+  <div class="form-group row"
+       [ngClass]="{'has-danger': forma.get('password2').status == 'INVALID' && forma.get('password2').touched}">
+    <label class="col-2 col-form-label">Repetir</label>
+    <div class="col-md-8">
+
+      <input [formControlName]="['password2']"
+             class="form-control"
+             type="password"
+             placeholder="Repetir Password"
+
+      >
+
+      <div *ngIf="forma.get('password2').touched && forma.controls['password2'].errors?.required">
+        Este campo es obligatorio *</div>
+
+    </div>
+
+  </div>
+
+
+  <div [formArrayName]="['pasatiempos']">
+
+    <div class="form-group row"
+         *ngFor="let item of forma.controls['pasatiempos'].controls; let i = index"
+         [ngClass]="{'has-danger': forma.get('pasatiempos').controls[i].status == 'INVALID' && forma.get('pasatiempos').controls[i].touched}"
+    >
+      <label class="col-2 col-form-label">Pasatiempos {{ i + 1 }}</label>
+
+        <div class="col-md-8">
+
+          <input class="form-control" type="text" placeholder="Pasatiempos" name="pasatiempos" [formControlName]="[i]">
+
+          <div *ngIf="forma.controls['pasatiempos'].controls[i].touched && forma.controls['pasatiempos'].controls[i].errors?.required">
+            Este campo es obligatorio *</div>
+
+      </div>
+
+    </div>
+
+    <div class="form-group row">
+      <label class="col-2 col-form-label">&nbsp;</label>
+      <div class="input-group col-md-8">
+        <button (click)="agregarPsatiempo()" type="button" class="btn btn-primary">Nuevo pasatiempo</button>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+  <div class="form-group row">
+    <label class="col-2 col-form-label">&nbsp;</label>
+    <div class="input-group col-md-8">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="forma.invalid">
+        Guardar
+      </button>
+    </div>
+  </div>
+
+</form>
+
+  <pre>
+
+    {{ forma.valid }}
+    {{ forma | jsonFull }}
+
+  </pre>
